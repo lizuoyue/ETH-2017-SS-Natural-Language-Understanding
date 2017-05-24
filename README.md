@@ -1,1 +1,1 @@
-# NLU-Project-2
+# ETH Zurich - Spring 2017 - Natural Language Understanding
