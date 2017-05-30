@@ -43,4 +43,8 @@ nohup python3 -m bin.train \
         - $DEV_TARGETS" \
   --batch_size 64 \
   --train_steps $TRAIN_STEPS \
-  --output_dir $MODEL_DIR > log.txt &
+  --output_dir $MODEL_DIR > ../log.txt &
+
+  4. to-do
+  beam search?
+  
