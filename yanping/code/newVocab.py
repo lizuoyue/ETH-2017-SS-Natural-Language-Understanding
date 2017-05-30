@@ -22,10 +22,10 @@ class vocab(object):
 		f.close()
 
 	def saveVocab(self, fileName):
-		vocabList = sorted(self.vocabulary.items(), key = lambda d: d[1], reverse = True)
+		vocabList = sorted(self.vocabulary.items(), key = lambda d: (d[1],d[0]), reverse = True)
 		out = open(fileName, 'w')
 		for i in range(len(vocabList)):
-			out.write(vocabList[i][0] + "\n")
+			out.write("{}\t{}".format(vocabList[i][0], vocabList[i][1]) + "\n")
 		out.close()
 
 vocabObj = vocab()
