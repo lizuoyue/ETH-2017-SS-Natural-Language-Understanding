@@ -41,6 +41,6 @@ python -m bin.train \
         - $DEV_SOURCES
        target_files:
         - $DEV_TARGETS" \
-  --batch_size 32 \
+  --batch_size 64 \
   --train_steps $TRAIN_STEPS \
   --output_dir $MODEL_DIR
