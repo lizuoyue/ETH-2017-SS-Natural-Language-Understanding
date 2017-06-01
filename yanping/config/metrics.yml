@@ -1,0 +1,6 @@
+default_params: &default_params
+  - separator: " "
+  - postproc_fn: "seq2seq.data.postproc.slice_text"
+
+metrics:
+  - class: LogPerplexityMetricSpec
