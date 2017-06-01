@@ -28,6 +28,7 @@ def _binary_to_text():
       sys.stderr.write('Done reading\n')
       return
     str_len = struct.unpack('q', len_bytes)[0]
+    print (str_len)
     tf_example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
     tf_example = example_pb2.Example.FromString(tf_example_str)
     examples = []
@@ -44,6 +45,8 @@ def _text_to_binary():
   for inp in inputs:
     tf_example = example_pb2.Example()
     for feature in inp.strip().split('\t'):
+      if (len(feature.split("="))>2):
+        print (feature)
       (k, v) = feature.split('=')
       tf_example.features.feature[k].bytes_list.value.extend([v])
     tf_example_str = tf_example.SerializeToString()
