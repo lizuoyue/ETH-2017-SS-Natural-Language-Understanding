@@ -162,11 +162,11 @@ class Seq2SeqAttentionModel(object):
           cell_fw = tf.contrib.rnn.LSTMCell(
               hps.num_hidden,
               initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=123),
-              state_is_tuple=False)
+              state_is_tuple=True)
           cell_bw = tf.contrib.rnn.LSTMCell(
               hps.num_hidden,
               initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=113),
-              state_is_tuple=False)
+              state_is_tuple=True)
           (emb_encoder_inputs, fw_state, _) = tf.contrib.rnn.static_bidirectional_rnn(
               cell_fw, cell_bw, emb_encoder_inputs, dtype=tf.float32,
               sequence_length=article_lens)
@@ -192,7 +192,7 @@ class Seq2SeqAttentionModel(object):
         cell = tf.contrib.rnn.LSTMCell(
             hps.num_hidden,
             initializer=tf.random_uniform_initializer(-0.1, 0.1, seed=113),
-            state_is_tuple=False)
+            state_is_tuple=True)
 
         encoder_outputs = [tf.reshape(x, [hps.batch_size, 1, 2*hps.num_hidden])
                            for x in encoder_outputs]

@@ -102,6 +102,10 @@ def _Train(model, data_batcher):
     while not sv.should_stop() and step < FLAGS.max_run_steps:
       (article_batch, abstract_batch, targets, article_lens, abstract_lens,
        loss_weights, _, _) = data_batcher.NextBatch()
+      """for i in article_batch[0]:
+        if (i!=1):
+          print(vocab.IdToWord(i)),
+      print (" ")"""
       (_, summaries, loss, train_step) = model.run_train_step(
           sess, article_batch, abstract_batch, targets, article_lens,
           abstract_lens, loss_weights)
@@ -117,6 +121,22 @@ def _Train(model, data_batcher):
 
 
 def _Eval(model, data_batcher, vocab=None):
+  """
+  t=0
+  while t<20:
+    t+=1
+    (article_batch, abstract_batch, targets, article_lens, abstract_lens,
+     loss_weights, _, _) = data_batcher.NextBatch()
+    for i in article_batch[0]:
+      if (i!=1):
+        print(vocab.IdToWord(i)),
+    print (" ")
+  a=a
+  """
+
+
+
+
   """Runs model eval."""
   model.build_graph()
   saver = tf.train.Saver()
@@ -141,6 +161,11 @@ def _Eval(model, data_batcher, vocab=None):
 
     (article_batch, abstract_batch, targets, article_lens, abstract_lens,
      loss_weights, _, _) = data_batcher.NextBatch()
+    for i in article_batch[0]:
+      if (i!=1):
+        print(vocab.IdToWord(i)),
+    print (" ")
+
     (summaries, loss, train_step) = model.run_eval_step(
         sess, article_batch, abstract_batch, targets, article_lens,
         abstract_lens, loss_weights)
@@ -164,7 +189,6 @@ def main(unused_argv):
   # Check for presence of required special tokens.
   assert vocab.CheckVocab(data.PAD_TOKEN) > 0
   assert vocab.CheckVocab(data.UNKNOWN_TOKEN) >= 0
-  print (data.SENTENCE_START)
   assert vocab.CheckVocab(data.SENTENCE_START) > 0
   assert vocab.CheckVocab(data.SENTENCE_END) > 0
 
@@ -180,8 +204,8 @@ def main(unused_argv):
       lr=0.15,  # learning rate
       batch_size=batch_size,
       enc_layers=4,
-      enc_timesteps=210,
-      dec_timesteps=210,
+      enc_timesteps=100,
+      dec_timesteps=100,
       min_input_len=2,  # discard articles/summaries < than this
       num_hidden=256,  # for rnn cell
       emb_dim=128,  # If 0, don't use embedding
