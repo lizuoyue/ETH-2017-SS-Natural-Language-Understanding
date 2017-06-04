@@ -125,7 +125,7 @@ def _Eval(model, data_batcher, vocab=None):
   running_avg_loss = 0
   step = 0
   while True:
-    time.sleep(FLAGS.eval_interval_secs)
+    #time.sleep(FLAGS.eval_interval_secs)
     try:
       ckpt_state = tf.train.get_checkpoint_state(FLAGS.log_root)
     except tf.errors.OutOfRangeError as e:
