@@ -144,6 +144,7 @@ def _Eval(model, data_batcher, vocab=None):
     (summaries, loss, train_step) = model.run_eval_step(
         sess, article_batch, abstract_batch, targets, article_lens,
         abstract_lens, loss_weights)
+    sys.stdout.write('loss: %f\n' % loss)
     tf.logging.info(
         'article:  %s',
         ' '.join(data.Ids2Words(article_batch[0][:].tolist(), vocab)))
@@ -170,6 +171,8 @@ def main(unused_argv):
   batch_size = 4
   if FLAGS.mode == 'decode':
     batch_size = FLAGS.beam_size
+  if FLAGS.mode == 'eval':
+    batch_size = 1
 
   hps = seq2seq_attention_model.HParams(
       mode=FLAGS.mode,  # train, eval, decode
@@ -177,8 +180,8 @@ def main(unused_argv):
       lr=0.15,  # learning rate
       batch_size=batch_size,
       enc_layers=4,
-      enc_timesteps=100,
-      dec_timesteps=100,
+      enc_timesteps=210,
+      dec_timesteps=210,
       min_input_len=2,  # discard articles/summaries < than this
       num_hidden=256,  # for rnn cell
       emb_dim=128,  # If 0, don't use embedding
