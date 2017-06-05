@@ -121,7 +121,25 @@ def _Train(model, data_batcher):
 
 
 def _Eval(model, data_batcher, vocab=None):
-  """
+
+  reader = open(FLAGS.data_path, 'rb')
+  t=0
+  while t<20:
+    t=t+1
+    len_bytes = reader.read(8)
+    if not len_bytes:
+      return
+    str_len = struct.unpack('q', len_bytes)[0]
+    tf_example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
+    tf_example = example_pb2.Example.FromString(tf_example_str)
+    examples = []
+    for key in tf_example.features.feature:
+      examples.append('%s=%s' % (key, tf_example.features.feature[key].bytes_list.value[0]))
+    print (examples)
+  reader.close()
+  a=a
+ 
+  
   t=0
   while t<20:
     t+=1
@@ -132,7 +150,7 @@ def _Eval(model, data_batcher, vocab=None):
         print(vocab.IdToWord(i)),
     print (" ")
   a=a
-  """
+  
 
 
 
