@@ -22,14 +22,17 @@ Implement "Abstractive Text Summarization using Sequence-to-sequence RNNS and
 Beyond."
 
 """
+import numpy as np
 import sys
 import time
-
+import struct
 import tensorflow as tf
 import batch_reader
 import data
 import seq2seq_attention_decode
 import seq2seq_attention_model
+from tensorflow.core.example import example_pb2
+
 
 FLAGS = tf.app.flags.FLAGS
 tf.app.flags.DEFINE_string('data_path',
@@ -119,12 +122,29 @@ def _Train(model, data_batcher):
     sv.Stop()
     return running_avg_loss
 
+def sentence_to_id(sen,vocab,limit,pad):
+  t = sen.split(" ")
+  ans = []
+  for i in t:
+    ans.append(vocab.WordToId(i))
+    if (len(ans)==limit):
+      break
+  for i in range(len(t),limit):
+    ans.append(pad);
+  target = ans[1:]
+  target.append(pad)
+  #print ("target")
+  #print (target)
+  return [np.array(ans),min(len(t),limit),np.array(target)];
 
-def _Eval(model, data_batcher, vocab=None):
 
+
+def _Eval(model, data_batcher, vocab=None,hps=None):
+  
+  """
   reader = open(FLAGS.data_path, 'rb')
   t=0
-  while t<20:
+  while t<5:
     t=t+1
     len_bytes = reader.read(8)
     if not len_bytes:
@@ -132,29 +152,58 @@ def _Eval(model, data_batcher, vocab=None):
     str_len = struct.unpack('q', len_bytes)[0]
     tf_example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
     tf_example = example_pb2.Example.FromString(tf_example_str)
-    examples = []
-    for key in tf_example.features.feature:
-      examples.append('%s=%s' % (key, tf_example.features.feature[key].bytes_list.value[0]))
-    print (examples)
+    
+    article = (tf_example.features.feature["article"].bytes_list.value[0])
+    [article,article_lens,_] = sentence_to_id(article,vocab,hps.enc_timesteps,1)
+    article_batch = np.array([article])
+
+    abstract = (tf_example.features.feature["abstract"].bytes_list.value[0])
+    [abstract,abstract_lens,target] = sentence_to_id(abstract,vocab,hps.dec_timesteps,2)
+    abstract_batch = np.array([abstract])
+    targets = np.array([target])
+
+
+    loss_weights = np.zeros(
+        (hps.batch_size, hps.dec_timesteps), dtype=np.float32)
+    for i in range(0,abstract_lens):
+      loss_weights[0][i]=1;
+    abstract_lens = np.array([abstract_lens])
+    article_lens = np.array([article_lens])
+    print (abstract_batch.shape)
+    print (abstract_lens.shape)
+
+  
   reader.close()
-  a=a
- 
+
+  
+  
+  
   
   t=0
-  while t<20:
+  while t<5:
     t+=1
     (article_batch, abstract_batch, targets, article_lens, abstract_lens,
      loss_weights, _, _) = data_batcher.NextBatch()
-    for i in article_batch[0]:
-      if (i!=1):
+    print (article_batch.shape)
+    print (article_lens.shape)
+    print (abstract_batch.shape)
+    print (targets.shape)
+
+    for i in abstract_batch[0]:
+      if (i!=2):
         print(vocab.IdToWord(i)),
     print (" ")
   a=a
+  """
+  
   
 
 
 
-
+  reader = open(FLAGS.data_path, 'rb')
+  out = open("perplexity-result.txt","w")
+  out2 = open("senten-result.txt","w")
+  t=0
   """Runs model eval."""
   model.build_graph()
   saver = tf.train.Saver()
@@ -177,17 +226,64 @@ def _Eval(model, data_batcher, vocab=None):
     tf.logging.info('Loading checkpoint %s', ckpt_state.model_checkpoint_path)
     saver.restore(sess, ckpt_state.model_checkpoint_path)
 
-    (article_batch, abstract_batch, targets, article_lens, abstract_lens,
-     loss_weights, _, _) = data_batcher.NextBatch()
+
+
+    t=t+1
+    len_bytes = reader.read(8)
+    if not len_bytes:
+      return
+    str_len = struct.unpack('q', len_bytes)[0]
+    tf_example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
+    tf_example = example_pb2.Example.FromString(tf_example_str)
+    
+    article = (tf_example.features.feature["article"].bytes_list.value[0])
+    [article,article_lens,_] = sentence_to_id(article,vocab,hps.enc_timesteps,1)
+    article_batch = np.array([article])
+
+    abstract = (tf_example.features.feature["abstract"].bytes_list.value[0])
+    [abstract,abstract_lens,target] = sentence_to_id(abstract,vocab,hps.dec_timesteps,2)
+    abstract_batch = np.array([abstract])
+    targets = np.array([target])
+
+
+    loss_weights = np.zeros(
+        (hps.batch_size, hps.dec_timesteps), dtype=np.float32)
+    for i in range(0,abstract_lens):
+      loss_weights[0][i]=1;
+    abstract_lens = np.array([abstract_lens])
+    article_lens = np.array([article_lens])
+    """
+    print (abstract_batch)
+    print (abstract_lens)
+    print (article_batch)
+    print (article_lens)
+    print (loss_weights)
+
+
+    (article_batch2, abstract_batch2, targets2, article_lens2, abstract_lens2,
+     loss_weights2, _, _) = data_batcher.NextBatch()
+    print (abstract_batch2)
+    print (abstract_lens2)
+    print (article_batch2)
+    print (article_lens2)
+    print (loss_weights2)
+    """
+
+
     for i in article_batch[0]:
       if (i!=1):
-        print(vocab.IdToWord(i)),
-    print (" ")
+        out2.write(vocab.IdToWord(i)+" "),
+    out2.write("\t")
+    for i in abstract_batch[0]:
+      if (i!=2):
+        out2.write(vocab.IdToWord(i)+" "),
+    out2.write("\n")
 
     (summaries, loss, train_step) = model.run_eval_step(
         sess, article_batch, abstract_batch, targets, article_lens,
         abstract_lens, loss_weights)
     sys.stdout.write('loss: %f\n' % loss)
+    out.write('%f\n' % (2**loss))
     tf.logging.info(
         'article:  %s',
         ' '.join(data.Ids2Words(article_batch[0][:].tolist(), vocab)))
@@ -200,6 +296,10 @@ def _Eval(model, data_batcher, vocab=None):
         running_avg_loss, loss, summary_writer, train_step)
     if step % 100 == 0:
       summary_writer.flush()
+
+  reader.close()
+  out.close()
+  out2.close()
 
 
 def main(unused_argv):
@@ -244,7 +344,7 @@ def main(unused_argv):
   elif hps.mode == 'eval':
     model = seq2seq_attention_model.Seq2SeqAttentionModel(
         hps, vocab, num_gpus=FLAGS.num_gpus)
-    _Eval(model, batcher, vocab=vocab)
+    _Eval(model, batcher, vocab=vocab,hps =hps)
   elif hps.mode == 'decode':
     decode_mdl_hps = hps
     # Only need to restore the 1st step and reuse it since
