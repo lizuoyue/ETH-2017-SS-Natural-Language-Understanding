@@ -5,7 +5,7 @@ model_params:
     # num_units: 512
   bridge.class: seq2seq.models.bridges.InitialStateBridge
   embedding.dim: 128
-  inference.beam_search.beam_width: 8
+  # inference.beam_search.beam_width: 8
   encoder.class: seq2seq.encoders.UnidirectionalRNNEncoder
   encoder.params:
     rnn_cell:
