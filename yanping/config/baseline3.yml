@@ -33,7 +33,7 @@ model_params:
   optimizer.learning_rate: 0.2
   optimizer.lr_decay_type: exponential_decay
   optimizer.lr_decay_steps: 100
-  optimizer.lr_decay_rate: 0.9
+  optimizer.lr_decay_rate: 0.96
   optimizer.lr_staircase: True
   optimizer.clip_gradients: 5.0
   source.max_seq_len: 50
