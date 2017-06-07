@@ -18,13 +18,15 @@ class vocab(object):
 					self.vocabulary[word] = 0
 				self.vocabulary[word] += 1
 			line = f.readline()
-		self.vocabulary["<eos>"] = self.count
+		# self.vocabulary["<eos>"] = self.count
 		f.close()
 
 	def saveVocab(self, fileName):
 		vocabList = sorted(self.vocabulary.items(), key = lambda d: (d[1],d[0]), reverse = True)
 		out = open(fileName, 'w')
 		for i in range(len(vocabList)):
+			if vocabList[i][1] == 1:
+				break
 			out.write("{}\t{}".format(vocabList[i][0], vocabList[i][1]) + "\n")
 		out.close()
 
