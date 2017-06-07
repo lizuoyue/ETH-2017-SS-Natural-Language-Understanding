@@ -16,6 +16,7 @@ model_params:
       num_layers: 4
   decoder.class: seq2seq.decoders.BasicDecoder
   decoder.params:
+    max_decode_length: 100
     rnn_cell:
       cell_class: LSTMCell
       cell_params:
@@ -28,7 +29,7 @@ model_params:
   # optimizer.params:
   #   epsilon: 0.0000008
   # optimizer.learning_rate: 0.0001
-  optimizer.learning_rate: 0.2
+  optimizer.learning_rate: 0.5
   optimizer.lr_decay_type: exponential_decay
   optimizer.lr_decay_steps: 100
   optimizer.lr_decay_rate: 0.96
