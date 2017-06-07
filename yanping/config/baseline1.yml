@@ -5,6 +5,7 @@ model_params:
     # num_units: 512
   bridge.class: seq2seq.models.bridges.InitialStateBridge
   embedding.dim: 128
+  inference.beam_search.beam_width: 2
   encoder.class: seq2seq.encoders.UnidirectionalRNNEncoder
   encoder.params:
     rnn_cell:
@@ -16,7 +17,7 @@ model_params:
       num_layers: 4
   decoder.class: seq2seq.decoders.BasicDecoder
   decoder.params:
-    max_decode_length: 100
+    max_decode_length: 50
     rnn_cell:
       cell_class: LSTMCell
       cell_params:
