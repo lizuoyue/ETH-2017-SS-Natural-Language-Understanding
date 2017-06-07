@@ -17,12 +17,15 @@ export TRAIN_STEPS=1000000
 3. training
 
 export MODEL_DIR=../model
+export CONFIG_PATH=../../ETH-2017-SS-Natural-Language-Understanding/yanping/config/baseline.yml
+export LOG_PATH=../log.txt
+
 mkdir -p $MODEL_DIR
 
 nohup python3 -m bin.train \
   --config_paths="
-      ../../ETH-2017-SS-Natural-Language-Understanding/yanping/config/baseline.yml,
-      ./example_configs/train_seq2seq.yml,
+      $CONFIG_PATH,
+      ../../ETH-2017-SS-Natural-Language-Understanding/yanping/config/train_seq2seq.yml,
       ../../ETH-2017-SS-Natural-Language-Understanding/yanping/config/metrics.yml" \
   --model_params "
       vocab_source: $VOCAB_SOURCE
@@ -43,7 +46,7 @@ nohup python3 -m bin.train \
         - $DEV_TARGETS" \
   --batch_size 64 \
   --train_steps $TRAIN_STEPS \
-  --output_dir $MODEL_DIR > ../log.txt &
+  --output_dir $MODEL_DIR > $LOG_PATH &
 
   4. to-do
   beam search?
