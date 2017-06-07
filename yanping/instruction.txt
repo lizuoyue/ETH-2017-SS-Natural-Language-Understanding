@@ -16,9 +16,9 @@ export TRAIN_STEPS=1000000
 
 3. training
 
-export MODEL_DIR=../model
-export CONFIG_PATH=../../ETH-2017-SS-Natural-Language-Understanding/yanping/config/baseline.yml
-export LOG_PATH=../log.txt
+export MODEL_DIR=../model2
+export CONFIG_PATH=../../ETH-2017-SS-Natural-Language-Understanding/yanping/config/baseline2.yml
+export LOG_PATH=../log2.txt
 
 mkdir -p $MODEL_DIR
 
