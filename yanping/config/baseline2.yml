@@ -11,7 +11,7 @@ model_params:
     rnn_cell:
       cell_class: LSTMCell
       cell_params:
-        num_units: 512
+        num_units: 256
       dropout_input_keep_prob: 0.8
       dropout_output_keep_prob: 1.0
       num_layers: 2
@@ -21,7 +21,7 @@ model_params:
     rnn_cell:
       cell_class: LSTMCell
       cell_params:
-        num_units: 512
+        num_units: 256
       dropout_input_keep_prob: 0.8
       dropout_output_keep_prob: 1.0
       # num_layers: 4
