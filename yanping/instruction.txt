@@ -4,8 +4,8 @@ export DATA_PATH=../../data
 
 export VOCAB_SOURCE=${DATA_PATH}/source_vocab.txt
 export VOCAB_TARGET=${DATA_PATH}/target_vocab.txt
-export TRAIN_SOURCES=${DATA_PATH}/train/source.txt
-export TRAIN_TARGETS=${DATA_PATH}/train/target.txt
+export TRAIN_SOURCES=${DATA_PATH}/train/source2.txt
+export TRAIN_TARGETS=${DATA_PATH}/train/target2.txt
 export DEV_SOURCES=${DATA_PATH}/validation/source.txt
 export DEV_TARGETS=${DATA_PATH}/validation/target.txt
 
@@ -16,9 +16,9 @@ export TRAIN_STEPS=1000000
 
 3. training
 
-export MODEL_DIR=../model5
+export MODEL_DIR=../model6
 export CONFIG_PATH=../../ETH-2017-SS-Natural-Language-Understanding/yanping/config/baseline5.yml
-export LOG_PATH=../log5.txt
+export LOG_PATH=../log6.txt
 
 mkdir -p $MODEL_DIR
 
