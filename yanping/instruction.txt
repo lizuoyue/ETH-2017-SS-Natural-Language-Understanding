@@ -50,7 +50,18 @@ nohup python3 -m bin.train \
 
   prediction
 
-  python -m bin.infer \
+  nohup python3 -m bin.infer \
+  --tasks "
+    - class: DecodeText" \
+  --model_dir $MODEL_DIR \
+  --input_pipeline "
+    class: ParallelTextInputPipeline
+    params:
+      source_files:
+        - $DEV_SOURCES" \
+  >  ${PRED_DIR}/predictions.txt &
+
+  nohup python3 -m bin.infer \
   --tasks "
     - class: DecodeText
     - class: DumpBeams
@@ -64,7 +75,7 @@ nohup python3 -m bin.train \
     params:
       source_files:
         - $DEV_SOURCES" \
-  > ${PRED_DIR}/predictions.txt
+  > ${PRED_DIR}/predictions.txt &
 
   4. to-do
   beam search?
