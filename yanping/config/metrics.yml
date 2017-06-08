@@ -4,3 +4,4 @@ default_params: &default_params
 
 metrics:
   - class: LogPerplexityMetricSpec
+  - class: PerplexityMetricSpec
