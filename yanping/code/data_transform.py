@@ -1,3 +1,4 @@
+import codecs
 def write_to_result(x,y,out1,out2):
   x = x.replace("...","")
   x = x.replace("="," ")
@@ -9,7 +10,7 @@ def write_to_result(x,y,out1,out2):
   out1.write(x+"\n")
   out2.write(y+"\n")
 
-f = open("../data/new/movie_lines.txt","r")
+f = open("../data/new/movie_lines.txt","r",encoding="utf8")
 line = f.readline()
 mylines = {}
 while line:
