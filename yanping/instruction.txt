@@ -46,7 +46,7 @@ nohup python3 -m bin.train \
         - $DEV_TARGETS" \
   --batch_size 64 \
   --train_steps $TRAIN_STEPS \
-  --output_dir $MODEL_DIR > $LOG_PATH &
+  --output_dir $MODEL_DIR >> $LOG_PATH &
 
   prediction
 
